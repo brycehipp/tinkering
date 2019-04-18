@@ -17,6 +17,6 @@ function setupVisualizer() {
 }
 
 navigator.mediaDevices.getUserMedia({ audio: true }).then(source => {
-  auditCtx.createMediaStreamSource(source).connect(data);
+  auditCtx.createMediaStreamSource(source).connect(analyser);
   setupVisualizer();
 });
