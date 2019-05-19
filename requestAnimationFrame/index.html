@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>requestAnimationFrame</title>
+
+    <style>
+      html {
+        font-size: 25px;
+      }
+
+      div {
+        width: 0.5rem;
+        height: 0.5rem;
+        background: goldenrod;
+        float: left;
+      }
+
+      button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+      button:last-of-type {
+        left: 100px;
+      }
+
+      select {
+        position: absolute;
+        top: 60px;
+        left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+
+    <select id="type">
+      <option value="interval">setInterval</option>
+      <option value="aniFrame">requestAnimationFrame</option>
+    </select>
+
+    <script>
+      let intervalId;
+
+      function createDiv() {
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+      }
+
+      function getType() {
+        const selectEl = document.getElementById('type');
+        const selIndex = selectEl.selectedIndex;
+        return selectEl.options[selIndex].value;
+      }
+
+      const isInterval = () => getType() === 'interval';
+      const isAniFrame = () => getType() === 'aniFrame';
+
+      function runAniFrame() {
+        intervalId = requestAnimationFrame(() => {
+          createDiv();
+          runAniFrame();
+        });
+      }
+
+      function runInterval() {
+        intervalId = setInterval(createDiv, 1000 / 60);
+      }
+
+      function start() {
+        if (intervalId) return;
+
+        if (isInterval()) {
+          runInterval();
+        }
+
+        if (isAniFrame()) {
+          runAniFrame();
+        }
+      }
+
+      function stop() {
+        if (isInterval()) {
+          clearInterval(intervalId);
+        }
+
+        if (isAniFrame()) {
+          cancelAnimationFrame(intervalId);
+        }
+
+        intervalId = null;
+      }
+
+      document.getElementById('start').addEventListener('click', start);
+
+      document.getElementById('stop').addEventListener('click', stop);
+    </script>
+  </body>
+</html>
